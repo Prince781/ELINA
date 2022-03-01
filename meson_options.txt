@@ -1,0 +1,1 @@
+option('has_vector', type: 'boolean', value: true, description: 'Use vector instructions for the Octagon library')
