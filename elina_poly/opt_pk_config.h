@@ -37,15 +37,9 @@
 
 
 #ifdef __cplusplus
-#define HAS_BOOL
 extern "C" {
-#endif
-
-#ifndef HAS_BOOL
-#define HAS_BOOL
-typedef char bool;
-static const bool false = 0;
-static const bool true  = 1;
+#else
+#include <stdbool.h>
 #endif
 
 #define opt_numint_t long long int

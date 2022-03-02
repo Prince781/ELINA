@@ -30,15 +30,9 @@
 #include <string.h>
 
 #ifdef __cplusplus
-#define HAS_BOOL
 extern "C" {
-#endif
-
-#ifndef HAS_BOOL
-#define HAS_BOOL
-typedef char bool;
-static const bool false = 0;
-static const bool true  = 1;
+#else
+#include <stdbool.h>
 #endif
 
 #if !(defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __APPLE__ || defined __CYGWIN__)
