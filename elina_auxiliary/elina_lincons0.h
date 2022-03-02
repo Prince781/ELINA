@@ -81,6 +81,15 @@ elina_lincons0_t elina_lincons0_make(elina_constyp_t constyp,
   /* Create a constraint of given type with the given expression.
      The expression and the coefficient are not duplicated, just pointed to */
 
+static inline elina_lincons0_make2(elina_lincons0_t *self,
+                                   elina_constyp_t constyp,
+			           elina_linexpr0_t* linexpr,
+			           elina_scalar_t* scalar)
+  /* For bindings */
+{
+    *self = elina_lincons0_make(constyp, linexpr, scalar);
+}
+
 elina_lincons0_t elina_lincons0_make_unsat(void);
   /* Create the constraint -1>=0 */
 
@@ -88,6 +97,11 @@ elina_lincons0_t elina_lincons0_make_unsat(void);
 elina_lincons0_t elina_lincons0_copy(elina_lincons0_t* cons);
   /* Duplication */
 
+static inline void elina_lincons0_copy2(elina_lincons0_t *src, elina_lincons0_t *dst)
+  /* For bindings */
+{
+    *dst = elina_lincons0_copy(src);
+}
 
 void elina_lincons0_clear(elina_lincons0_t* cons);
   /* Free the linear expression of the constraint and set pointer to NULL */
