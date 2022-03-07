@@ -192,9 +192,9 @@ int elina_interval_cmp_int(elina_interval_t *i1, int i)
 {
     elina_interval_t *itv = elina_interval_alloc();
     elina_interval_set_int(itv, i, i);
-    bool b = elina_interval_cmp(i1, itv);
+    int cmp = elina_interval_cmp(i1, itv);
     elina_interval_free(itv);
-    return b;
+    return cmp;
 }
 bool elina_interval_equal(elina_interval_t* itv1, elina_interval_t* itv2)
 {  
