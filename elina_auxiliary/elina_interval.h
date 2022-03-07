@@ -28,6 +28,7 @@
 
 #include <assert.h>
 #include <math.h>
+#include <stddef.h>
 #include <stdio.h>
 
 #include "elina_config.h"
@@ -54,6 +55,8 @@ void elina_interval_free(elina_interval_t* interval);
 void elina_interval_fprint(FILE* stream, elina_interval_t* a);
 
 void elina_interval_print(elina_interval_t* a);
+
+size_t elina_interval_snprint(elina_interval_t *a, size_t buflen, char buffer[buflen]);
 
   /* Printing */
 void elina_interval_swap(elina_interval_t* a, elina_interval_t* b);
@@ -112,6 +115,8 @@ int elina_interval_cmp(elina_interval_t* i1, elina_interval_t* i2);
      -2: i1.inf less than i2.inf
      +2: i1.inf greater than i2.inf
   */
+int elina_interval_cmp_int(elina_interval_t *i1, int i);
+  /* Comparison: (see above) */
 bool elina_interval_equal(elina_interval_t* i1, elina_interval_t* i2);
 bool elina_interval_equal_int(elina_interval_t* i, int b);
   /* Equality */

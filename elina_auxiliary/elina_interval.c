@@ -25,10 +25,12 @@
 /* ************************************************************************* */
 
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <limits.h>
 #include <assert.h>
+#include <string.h>
 
 #include "elina_interval.h"
 
@@ -61,6 +63,22 @@ void elina_interval_fprint(FILE* stream, elina_interval_t* a)
   fprintf(stream,",");
   elina_scalar_fprint(stream,a->sup);
   fprintf(stream,"]");
+}
+size_t elina_interval_snprint(elina_interval_t *a, size_t buflen, char buffer[buflen])
+{
+    if (!buflen || !buffer)
+        return 0;
+    size_t sz = 0;
+    buffer[sz++] = '[';
+    sz += elina_scalar_snprint(a->inf, buflen - sz, &buffer[sz]);
+    if (!sz || sz >= buflen)
+        return sz;
+    buffer[sz++] = ',';
+    sz += elina_scalar_snprint(a->sup, buflen - sz, &buffer[sz]);
+    if (!sz || sz >= buflen)
+        return sz;
+    buffer[sz++] = ']';
+    return sz;
 }
 
 /* ====================================================================== */
@@ -169,6 +187,14 @@ int elina_interval_cmp(elina_interval_t* itv1, elina_interval_t* itv2)
     else if (b2) return 1;
     else return sinf > 0 ? 2 : -2;
   }
+}
+int elina_interval_cmp_int(elina_interval_t *i1, int i)
+{
+    elina_interval_t *itv = elina_interval_alloc();
+    elina_interval_set_int(itv, i, i);
+    bool b = elina_interval_cmp(i1, itv);
+    elina_interval_free(itv);
+    return b;
 }
 bool elina_interval_equal(elina_interval_t* itv1, elina_interval_t* itv2)
 {  

@@ -81,7 +81,7 @@ elina_lincons0_t elina_lincons0_make(elina_constyp_t constyp,
   /* Create a constraint of given type with the given expression.
      The expression and the coefficient are not duplicated, just pointed to */
 
-static inline elina_lincons0_make2(elina_lincons0_t *self,
+static inline void elina_lincons0_make2(elina_lincons0_t *self,
                                    elina_constyp_t constyp,
 			           elina_linexpr0_t* linexpr,
 			           elina_scalar_t* scalar)

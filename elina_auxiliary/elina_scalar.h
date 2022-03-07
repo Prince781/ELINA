@@ -29,6 +29,7 @@
 
 #include <assert.h>
 #include <math.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -79,6 +80,7 @@ void elina_scalar_reinit(elina_scalar_t* scalar, elina_scalar_discr_t d);
 
 void elina_scalar_print(elina_scalar_t* a);
 void elina_scalar_fprint(FILE* stream, elina_scalar_t* a);
+size_t elina_scalar_snprint(elina_scalar_t *a, size_t buflen, char buffer[buflen]);
   /* Printing */
 
 extern int elina_scalar_print_prec;

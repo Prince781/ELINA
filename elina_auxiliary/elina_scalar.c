@@ -24,6 +24,7 @@
 /* ************************************************************************* */
 
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <limits.h>
@@ -87,6 +88,46 @@ void elina_scalar_fprint(FILE* stream, elina_scalar_t* a)
       abort();
     }
   } 
+}
+
+size_t elina_scalar_snprint(elina_scalar_t *a, size_t buflen, char buffer[buflen])
+{
+    if (!buflen || !buffer)
+        return 0;
+    size_t sz = 0;
+    int flag;
+
+    flag = elina_scalar_infty(a);
+    if (flag){
+        sz += snprintf(&buffer[sz], buflen - sz, "%s", flag>0 ? "+oo" : "-oo");
+    } else {
+        char *mpq_s = NULL;
+        switch(a->discr){
+            case ELINA_SCALAR_DOUBLE:
+                sz += snprintf(&buffer[sz],buflen-sz,"%.*g",elina_scalar_print_prec,a->val.dbl + 0.0);
+                break;
+            case ELINA_SCALAR_MPQ:
+                mpq_s = mpq_get_str(NULL,10,a->val.mpq);
+                sz += snprintf(&buffer[sz],buflen-sz,"%s",mpq_s);
+                free(mpq_s);
+                break;
+            case ELINA_SCALAR_MPFR:
+                {
+                    double d = mpfr_get_d(a->val.mpfr,GMP_RNDU);
+                    if (mpfr_cmp_d(a->val.mpfr,d)) {
+                        char *mpfr_s = mpfr_get_str(NULL,NULL,10,elina_scalar_print_prec,a->val.mpfr,GMP_RNDU);
+                        sz += snprintf(&buffer[sz],buflen-sz,"%s",mpfr_s);
+                        mpfr_free_str(mpfr_s);
+                    } else {
+                        sz += snprintf(&buffer[sz],buflen-sz,"%.*g",elina_scalar_print_prec,d + 0.0);
+                    }
+                }
+                break;
+            default: 
+                abort();
+        }
+    }
+    return sz;
 }
 
 /* ====================================================================== */

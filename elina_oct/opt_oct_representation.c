@@ -28,11 +28,9 @@
 
 
 opt_oct_t * opt_oct_alloc_internal(opt_oct_internal_t *pr, int dim, int intdim){
-	opt_oct_t *o = (opt_oct_t *)malloc(sizeof(opt_oct_t));
+	opt_oct_t *o = (opt_oct_t *)calloc(1,sizeof(opt_oct_t));
 	o->intdim = intdim;
 	o->dim = dim;
-	o->closed = NULL;
-	o->m = NULL;
 	return o;
 }
 
@@ -59,8 +57,7 @@ void opt_oct_free_internal(opt_oct_internal_t *pr, opt_oct_t *o){
 	if(o->closed){
 		opt_hmat_free(o->closed);
 	}
-	o->m = NULL;
-	o->closed = NULL;
+        *o = (opt_oct_t) {0};
 	free(o);
 }
 
