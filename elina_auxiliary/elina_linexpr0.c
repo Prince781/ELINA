@@ -293,7 +293,85 @@ void elina_linexpr0_free(elina_linexpr0_t* e)
 void elina_linexpr0_print(elina_linexpr0_t* a, char** name_of_dim)
 { elina_linexpr0_fprint(stdout,a,name_of_dim); }
 
+size_t elina_linexpr0_snprint(elina_linexpr0_t *a, char **name_of_dim, size_t buflen, char buffer[buflen])
+{
+    if (!buflen || !buffer)
+        return 0;
+    size_t sz = 0;
+    size_t i = 0;
+    elina_scalar_t* pscalar = 0;
+    elina_scalar_t* scalar = NULL;
+    elina_coeff_t* coeff = NULL;
+    elina_dim_t dim = 0;
+    bool first = false;
+    int sgn = 0;
 
+    scalar = elina_scalar_alloc();
+
+    first = true;
+    elina_linexpr0_ForeachLinterm(a,i,dim,coeff) {
+        if (sz >= buflen)
+            break;
+        if (!elina_coeff_zero(coeff)) {
+            switch(coeff->discr){
+                case ELINA_COEFF_SCALAR:
+                    pscalar = coeff->val.scalar;
+                    sgn = elina_scalar_sgn(pscalar);
+                    if (sgn > 0){
+                        elina_scalar_set(scalar,pscalar);
+                        if (!first)
+                            sz += snprintf(&buffer[sz], buflen - sz, "  + ");
+                    } else {
+                        elina_scalar_neg(scalar,pscalar);
+                        sz += snprintf(&buffer[sz], buflen - sz, first ? "-" : " - ");
+                    }
+                    if (sz < buflen && !elina_scalar_equal_int(scalar,1))
+                        sz += elina_scalar_snprint(scalar, buflen - sz, &buffer[sz]);
+                break;
+                case ELINA_COEFF_INTERVAL:
+                    if (!first)
+                        sz += snprintf(&buffer[sz], buflen - sz, "  + ");
+                    if (sz < buflen)
+                        sz += elina_interval_snprint(coeff->val.interval, buflen - sz, &buffer[sz]);
+                break;
+            }
+            if (sz >= buflen)
+                break;
+            if (name_of_dim)
+                sz += snprintf(&buffer[sz], buflen - sz, "%s", name_of_dim[dim]);
+            else
+                sz += snprintf(&buffer[sz], buflen - sz, "x%lu", (unsigned long)dim);
+            first = false;
+        }
+    }
+    /* Constant */
+    if (sz < buflen && (first || !elina_coeff_zero(&a->cst))) {
+        switch (a->cst.discr) {
+            case ELINA_COEFF_SCALAR:
+                pscalar = a->cst.val.scalar;
+                sgn = elina_scalar_sgn(pscalar);
+                if (sgn >= 0){
+                    elina_scalar_set(scalar,pscalar);
+                    if (!first)
+                        sz += snprintf(&buffer[sz], buflen - sz, " + ");
+                } else {
+                    elina_scalar_neg(scalar,pscalar);
+                    sz += snprintf(&buffer[sz], buflen - sz, first ? "-" : " - ");
+                }
+                if (sz < buflen)
+                    sz += elina_scalar_snprint(scalar, buflen - sz, &buffer[sz]);
+                break;
+            case ELINA_COEFF_INTERVAL:
+                if (!first)
+                    sz += snprintf(&buffer[sz], buflen - sz, " + ");
+                if (sz < buflen)
+                    sz += elina_interval_snprint(a->cst.val.interval, buflen - sz, &buffer[sz]);
+                break;
+        }
+    }
+    elina_scalar_free(scalar);
+    return sz;
+}
 
 void elina_linexpr0_fprint(FILE* stream, elina_linexpr0_t* a, char** name_of_dim)
 {

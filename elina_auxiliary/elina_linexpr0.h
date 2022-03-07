@@ -120,6 +120,7 @@ elina_linexpr0_t* elina_linexpr0_copy(elina_linexpr0_t* a);
 
 void elina_linexpr0_fprint(FILE* stream, elina_linexpr0_t* a, char** name_of_dim);
 void elina_linexpr0_print(elina_linexpr0_t* a, char** name_of_dim);
+size_t elina_linexpr0_snprint(elina_linexpr0_t *a, char **name_of_dim, size_t buflen, char buffer[buflen]);
   /* Printing a linear expression */
 
 /* ====================================================================== */
