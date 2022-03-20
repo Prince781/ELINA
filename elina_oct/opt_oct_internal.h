@@ -473,6 +473,7 @@ void opt_oct_minimize(elina_manager_t* man, opt_oct_t* o);
 void opt_oct_canonicalize(elina_manager_t* man, opt_oct_t* o);
 int opt_oct_hash(elina_manager_t* man, opt_oct_t* o);
 void opt_oct_approximate(elina_manager_t* man, opt_oct_t* o, int algorithm);
+size_t opt_oct_snprint(elina_manager_t *man, opt_oct_t* o, char **name_of_dim, size_t buflen, char buffer[buflen]);
 
 
 /**************

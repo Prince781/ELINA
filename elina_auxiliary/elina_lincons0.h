@@ -109,6 +109,7 @@ void elina_lincons0_clear(elina_lincons0_t* cons);
 void elina_lincons0_print(elina_lincons0_t* cons, char** name_of_dim);
 void elina_lincons0_fprint(FILE* stream,
 			elina_lincons0_t* cons, char** name_of_dim);
+size_t elina_lincons0_snprint(elina_lincons0_t* cons, char** name_of_dim, size_t buflen, char buffer[buflen]);
   /* Printing a linear constraint */
 
 /* ====================================================================== */
@@ -160,6 +161,7 @@ void elina_lincons0_array_print(elina_lincons0_array_t* elina_lincons0_array,
 void elina_lincons0_array_fprint(FILE* stream,
 			      elina_lincons0_array_t* elina_lincons0_array,
 			      char** name_of_dim);
+size_t elina_lincons0_array_snprint(elina_lincons0_array_t* array, char **name_of_dim, size_t buflen, char buffer[buflen]);
   /* Printing */
 
 elina_linexpr_type_t elina_lincons0_array_type(elina_lincons0_array_t* array);

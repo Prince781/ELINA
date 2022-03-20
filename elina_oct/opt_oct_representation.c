@@ -268,6 +268,15 @@ void opt_oct_approximate(elina_manager_t* man, opt_oct_t* o, int algorithm)
   elina_manager_raise_exception(man,ELINA_EXC_NOT_IMPLEMENTED,pr->funid,
 			     "not implemented");
 }
+
+size_t opt_oct_snprint(elina_manager_t *man, opt_oct_t* o, char **name_of_dim, size_t buflen, char buffer[buflen])
+{
+    size_t sz = 0;
+    elina_lincons0_array_t array = opt_oct_to_lincons_array(man, o);
+    sz += elina_lincons0_array_snprint(&array, name_of_dim, buflen - sz, &buffer[sz]);
+    elina_lincons0_array_clear(&array);
+    return sz;
+}
 /****
 
 Topological closure

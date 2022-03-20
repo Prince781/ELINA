@@ -51,6 +51,29 @@ void elina_lincons0_fprint(FILE* stream, elina_lincons0_t* cons, char** name_of_
     elina_scalar_fprint(stream,cons->scalar);
   }
 }
+size_t elina_lincons0_snprint(elina_lincons0_t* cons, char** name_of_dim, size_t buflen, char buffer[buflen])
+{
+    if (!buflen || !buffer)
+        return 0;
+    size_t sz = 0;
+    sz += elina_linexpr0_snprint(cons->linexpr0, name_of_dim, buflen - sz, &buffer[sz]);
+    sz += snprintf(&buffer[sz], buflen - sz,
+    cons->constyp == ELINA_CONS_EQ || cons->constyp == ELINA_CONS_EQMOD ?
+        " = 0" :
+        ( cons->constyp == ELINA_CONS_SUPEQ ?
+            " >= 0" :
+            (cons->constyp == ELINA_CONS_SUP ?
+                " > 0" :
+                (cons->constyp == ELINA_CONS_DISEQ ?
+                    " != 0" :
+                    "\"ERROR in elina_lincons0_fprint\""))));
+    if (cons->constyp == ELINA_CONS_EQMOD){
+        assert(cons->scalar!=NULL);
+        sz += snprintf(&buffer[sz], buflen - sz, " mod ");
+        sz += elina_scalar_snprint(cons->scalar, buflen - sz, &buffer[sz]);
+    }
+    return sz;
+}
 
 elina_lincons0_t elina_lincons0_make_unsat()
 {
@@ -235,6 +258,31 @@ void elina_lincons0_array_fprint(FILE* stream,
       fprintf(stream,"\n");
     }
   }
+}
+size_t elina_lincons0_array_snprint(elina_lincons0_array_t* array, char **name_of_dim, size_t buflen, char buffer[buflen])
+{
+    if (!buflen || !buffer)
+        return 0;
+    size_t sz = 0;
+    size_t i = 0;
+    sz += snprintf(&buffer[sz], buflen - sz, "%lu\n", (unsigned long)array->size);
+    if (sz >= buflen)
+        return sz;
+    if (array->size==0){
+        sz += snprintf(&buffer[sz], buflen - sz, "empty array of constraints\n");
+    } else {
+        sz += snprintf(&buffer[sz], buflen - sz, "array of constraints of size %lu\n", (unsigned long)array->size);
+        for (i = 0; sz < buflen && i < array->size; i++){
+            sz += snprintf(&buffer[sz], buflen - sz, "%2lu: ", (unsigned long)i);
+            if (sz >= buflen)
+                break;
+            sz += elina_lincons0_snprint(&array->p[i], name_of_dim, buflen - sz, &buffer[sz]);
+            if (sz >= buflen)
+                break;
+            sz += snprintf(&buffer[sz], buflen - sz, "\n");
+        }
+    }
+    return sz;
 }
 
 elina_linexpr_type_t elina_lincons0_array_type(elina_lincons0_array_t* array)

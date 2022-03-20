@@ -310,8 +310,6 @@ size_t elina_linexpr0_snprint(elina_linexpr0_t *a, char **name_of_dim, size_t bu
 
     first = true;
     elina_linexpr0_ForeachLinterm(a,i,dim,coeff) {
-        if (sz >= buflen)
-            break;
         if (!elina_coeff_zero(coeff)) {
             switch(coeff->discr){
                 case ELINA_COEFF_SCALAR:
@@ -325,18 +323,15 @@ size_t elina_linexpr0_snprint(elina_linexpr0_t *a, char **name_of_dim, size_t bu
                         elina_scalar_neg(scalar,pscalar);
                         sz += snprintf(&buffer[sz], buflen - sz, first ? "-" : " - ");
                     }
-                    if (sz < buflen && !elina_scalar_equal_int(scalar,1))
+                    if (!elina_scalar_equal_int(scalar,1))
                         sz += elina_scalar_snprint(scalar, buflen - sz, &buffer[sz]);
                 break;
                 case ELINA_COEFF_INTERVAL:
                     if (!first)
                         sz += snprintf(&buffer[sz], buflen - sz, "  + ");
-                    if (sz < buflen)
-                        sz += elina_interval_snprint(coeff->val.interval, buflen - sz, &buffer[sz]);
+                    sz += elina_interval_snprint(coeff->val.interval, buflen - sz, &buffer[sz]);
                 break;
             }
-            if (sz >= buflen)
-                break;
             if (name_of_dim)
                 sz += snprintf(&buffer[sz], buflen - sz, "%s", name_of_dim[dim]);
             else
@@ -345,7 +340,7 @@ size_t elina_linexpr0_snprint(elina_linexpr0_t *a, char **name_of_dim, size_t bu
         }
     }
     /* Constant */
-    if (sz < buflen && (first || !elina_coeff_zero(&a->cst))) {
+    if (first || !elina_coeff_zero(&a->cst)) {
         switch (a->cst.discr) {
             case ELINA_COEFF_SCALAR:
                 pscalar = a->cst.val.scalar;
@@ -358,14 +353,12 @@ size_t elina_linexpr0_snprint(elina_linexpr0_t *a, char **name_of_dim, size_t bu
                     elina_scalar_neg(scalar,pscalar);
                     sz += snprintf(&buffer[sz], buflen - sz, first ? "-" : " - ");
                 }
-                if (sz < buflen)
-                    sz += elina_scalar_snprint(scalar, buflen - sz, &buffer[sz]);
+                sz += elina_scalar_snprint(scalar, buflen - sz, &buffer[sz]);
                 break;
             case ELINA_COEFF_INTERVAL:
                 if (!first)
                     sz += snprintf(&buffer[sz], buflen - sz, " + ");
-                if (sz < buflen)
-                    sz += elina_interval_snprint(a->cst.val.interval, buflen - sz, &buffer[sz]);
+                sz += elina_interval_snprint(a->cst.val.interval, buflen - sz, &buffer[sz]);
                 break;
         }
     }
