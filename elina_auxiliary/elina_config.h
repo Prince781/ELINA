@@ -26,8 +26,29 @@
 #ifndef _ELINA_CONFIG_H_
 #define _ELINA_CONFIG_H_
 
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+/**
+ * Append to the string and return the amount of appended characters, excluding
+ * the null terminating byte.
+ */
+static inline size_t string_append(char *str, size_t remaining_sz, const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    size_t result = vsnprintf(str, remaining_sz, fmt, ap);
+    va_end(ap);
+
+    if (result < remaining_sz)
+        return result;
+    else if (remaining_sz > 0)
+        return remaining_sz - 1;
+    else
+        return 0;
+}
 
 #ifdef __cplusplus
 extern "C" {

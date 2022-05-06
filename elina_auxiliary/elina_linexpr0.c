@@ -318,24 +318,24 @@ size_t elina_linexpr0_snprint(elina_linexpr0_t *a, char **name_of_dim, size_t bu
                     if (sgn > 0){
                         elina_scalar_set(scalar,pscalar);
                         if (!first)
-                            sz += snprintf(&buffer[sz], buflen - sz, "  + ");
+                            sz += string_append(&buffer[sz], buflen - sz, "  + ");
                     } else {
                         elina_scalar_neg(scalar,pscalar);
-                        sz += snprintf(&buffer[sz], buflen - sz, first ? "-" : " - ");
+                        sz += string_append(&buffer[sz], buflen - sz, first ? "-" : " - ");
                     }
                     if (!elina_scalar_equal_int(scalar,1))
                         sz += elina_scalar_snprint(scalar, buflen - sz, &buffer[sz]);
                 break;
                 case ELINA_COEFF_INTERVAL:
                     if (!first)
-                        sz += snprintf(&buffer[sz], buflen - sz, "  + ");
+                        sz += string_append(&buffer[sz], buflen - sz, "  + ");
                     sz += elina_interval_snprint(coeff->val.interval, buflen - sz, &buffer[sz]);
                 break;
             }
             if (name_of_dim)
-                sz += snprintf(&buffer[sz], buflen - sz, "%s", name_of_dim[dim]);
+                sz += string_append(&buffer[sz], buflen - sz, "%s", name_of_dim[dim]);
             else
-                sz += snprintf(&buffer[sz], buflen - sz, "x%lu", (unsigned long)dim);
+                sz += string_append(&buffer[sz], buflen - sz, "x%lu", (unsigned long)dim);
             first = false;
         }
     }
@@ -348,16 +348,16 @@ size_t elina_linexpr0_snprint(elina_linexpr0_t *a, char **name_of_dim, size_t bu
                 if (sgn >= 0){
                     elina_scalar_set(scalar,pscalar);
                     if (!first)
-                        sz += snprintf(&buffer[sz], buflen - sz, " + ");
+                        sz += string_append(&buffer[sz], buflen - sz, " + ");
                 } else {
                     elina_scalar_neg(scalar,pscalar);
-                    sz += snprintf(&buffer[sz], buflen - sz, first ? "-" : " - ");
+                    sz += string_append(&buffer[sz], buflen - sz, first ? "-" : " - ");
                 }
                 sz += elina_scalar_snprint(scalar, buflen - sz, &buffer[sz]);
                 break;
             case ELINA_COEFF_INTERVAL:
                 if (!first)
-                    sz += snprintf(&buffer[sz], buflen - sz, " + ");
+                    sz += string_append(&buffer[sz], buflen - sz, " + ");
                 sz += elina_interval_snprint(a->cst.val.interval, buflen - sz, &buffer[sz]);
                 break;
         }
