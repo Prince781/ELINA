@@ -344,7 +344,7 @@ void elina_scalar_div(elina_scalar_t *a, elina_scalar_t *b, elina_scalar_t *c, e
 }
 
 void elina_scalar_max(elina_scalar_t *op, elina_scalar_t * op1, elina_scalar_t *op2){
-	bool res = elina_scalar_cmp(op1,op2);	
+	int res = elina_scalar_cmp(op1,op2);
 	if(res>=0){
 		elina_scalar_set(op,op1);
         }
@@ -354,7 +354,7 @@ void elina_scalar_max(elina_scalar_t *op, elina_scalar_t * op1, elina_scalar_t *
 }
 
 void elina_scalar_min(elina_scalar_t *op, elina_scalar_t * op1, elina_scalar_t * op2){
-	bool res = elina_scalar_cmp(op1,op2);	
+	int res = elina_scalar_cmp(op1,op2);
 	if(res>=0){
 		elina_scalar_set(op,op2);
         }
